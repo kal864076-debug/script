@@ -1,0 +1,165 @@
+-- Cargar librería Rayfield UI
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+--------------------------------------------------------------------
+-- 1. TEXTO RAINBOW DECORADO SOBRE LA CABEZA (✨ XZ SCRIPT ✨)
+--------------------------------------------------------------------
+local billboard = nil
+
+local function crearTextoCabeza(player)
+	local character = player.Character or player.CharacterAdded:Wait()
+	local head = character:WaitForChild("Head", 5)
+	if not head then return end
+
+	if head:FindFirstChild("BypassHubTag") then
+		head.BypassHubTag:Destroy()
+	end
+
+	billboard = Instance.new("BillboardGui")
+	billboard.Name = "BypassHubTag"
+	billboard.Adornee = head
+	billboard.Size = UDim2.new(0, 250, 0, 50)
+	billboard.StudsOffset = Vector3.new(0, 2.8, 0)
+	billboard.AlwaysOnTop = true
+
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.new(1, 0, 1, 0)
+	textLabel.BackgroundTransparency = 1
+	textLabel.Text = "✨ XZ SCRIPT ✨"
+	textLabel.TextScaled = true
+	textLabel.Font = Enum.Font.SpecialElite
+	textLabel.Parent = billboard
+
+	billboard.Parent = head
+
+	-- Animación Rainbow
+	task.spawn(function()
+		local hue = 0
+		while billboard and billboard.Parent do
+			hue = (hue + 0.005) % 1
+			textLabel.TextColor3 = Color3.fromHSV(hue, 0.85, 1)
+			task.wait(0.03)
+		end
+	end)
+end
+
+if LocalPlayer.Character then
+	crearTextoCabeza(LocalPlayer)
+end
+LocalPlayer.CharacterAdded:Connect(function()
+	task.wait(1)
+	crearTextoCabeza(LocalPlayer)
+end)
+
+--------------------------------------------------------------------
+-- 2. VENTANA PRINCIPAL (XZ omega - Púrpura con Imagen de Fondo)
+--------------------------------------------------------------------
+local Window = Rayfield:CreateWindow({
+	Name = "XZ omega 🔮",
+	LoadingTitle = "Cargando XZ omega...",
+	LoadingSubtitle = "Modo Celular",
+	ConfigurationSaving = { Enabled = false },
+	Discord = {
+		Enabled = true,
+		Invite = "cwcsUyK8H",
+		RememberJoins = true
+	},
+	KeySystem = false,
+	Theme = "Amethyst", -- Tema inicial por defecto (Púrpura)
+	BackgroundImage = 111426981648607 -- Fondo del panel personalizado
+})
+
+--------------------------------------------------------------------
+-- 3. PESTAÑA PRINCIPAL DE SCRIPTS
+--------------------------------------------------------------------
+local TabScripts = Window:CreateTab("Scripts", 119289138490113)
+
+TabScripts:CreateSection("🔥 Panel XZ robar un huevo 🔥")
+
+-- Información del creador en el menú
+TabScripts:CreateLabel("👤 Creador: @xz_omegaop")
+TabScripts:CreateLabel("🐣 Juego: Roba un huevo")
+
+-- Botón: Lemon premium
+TabScripts:CreateButton({
+	Name = "Lemon premium",
+	Callback = function()
+		if billboard then
+			billboard:Destroy()
+		end
+		Rayfield:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/lennonxscripts/lennonhubv2/refs/heads/main/stealaneggv2"))()
+	end,
+})
+
+-- Botón: Miranda premium
+TabScripts:CreateButton({
+	Name = "Miranda premium",
+	Callback = function()
+		if billboard then
+			billboard:Destroy()
+		end
+		Rayfield:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/miirandahub/loader/refs/heads/main/stealaeggs"))()
+	end,
+})
+
+-- Botón: Servidor privado
+TabScripts:CreateButton({
+	Name = "Servidor privado",
+	Callback = function()
+		if billboard then
+			billboard:Destroy()
+		end
+		Rayfield:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/kittylol-hub/Kittylol/refs/heads/main/main.lua"))()
+	end,
+})
+
+--------------------------------------------------------------------
+-- 4. PESTAÑA DE INFORMACIÓN Y CONFIGURACIÓN
+--------------------------------------------------------------------
+local TabInfo = Window:CreateTab("Info", 119289138490113)
+
+TabInfo:CreateSection("🎨 Cambiar Color del Panel 🔰")
+
+-- Selector de Colores para cambiar el tema al instante
+TabInfo:CreateDropdown({
+	Name = "Seleccionar Color de Tema",
+	Options = {"Azul cielo", "Morado", "Púrpura", "Rojo fuerte", "Amarillo"},
+	CurrentOption = "Púrpura",
+	Flag = "ColorThemeDropdown",
+	Callback = function(Option)
+		local selected = Option[1]
+		if selected == "Azul cielo" then
+			Rayfield:SetTheme("Ocean")
+		elseif selected == "Morado" then
+			Rayfield:SetTheme("Default")
+		elseif selected == "Púrpura" then
+			Rayfield:SetTheme("Amethyst")
+		elseif selected == "Rojo fuerte" then
+			Rayfield:SetTheme("DarkBlue")
+		elseif selected == "Amarillo" then
+			Rayfield:SetTheme("AmberGlow")
+		end
+	end,
+})
+
+TabInfo:CreateSection("✨ Estado ✨")
+
+TabInfo:CreateParagraph({
+	Title = "⚡ Próxima actualización...",
+	Content = "⚡ ━━━━━━━━━━━━━━━━━━━━━━ ⚡\n" ..
+	          "  Aproximadamente en la próxima versión:\n" ..
+	          "  • Más scripts y scripts VIPs\n" ..
+	          "  • Bypass para más juegos\n" ..
+	          "  • Menú rápido flotante\n" ..
+	          "⚡ ━━━━━━━━━━━━━━━━━━━━━━ ⚡"
+})
+
