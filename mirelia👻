@@ -1,0 +1,221 @@
+-- Cargar librería Rayfield UI
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local LocalPlayer = Players.LocalPlayer
+
+--------------------------------------------------------------------
+-- 0. PANTALLA DE CARGA (5 SEGUNDOS - TAPA TODA LA PANTALLA)
+--------------------------------------------------------------------
+local loadingGui = Instance.new("ScreenGui")
+loadingGui.Name = "MireliaLoadingScreen"
+loadingGui.IgnoreGuiInset = true
+loadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+
+local bgImage = Instance.new("ImageLabel")
+bgImage.Size = UDim2.new(1, 0, 1, 0)
+bgImage.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+bgImage.Image = "rbxassetid://112029134434567"
+bgImage.ScaleType = Enum.ScaleType.Crop
+bgImage.Parent = loadingGui
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 100)
+titleLabel.Position = UDim2.new(0, 0, 0.1, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "MIRELIÁ HUB"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.FredokaOne
+titleLabel.Parent = loadingGui
+
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1, 0, 0, 50)
+loadingText.Position = UDim2.new(0, 0, 0.85, 0)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "Cargando..."
+loadingText.TextColor3 = Color3.fromRGB(200, 200, 200)
+loadingText.TextScaled = true
+loadingText.Font = Enum.Font.SourceSansBold
+loadingText.Parent = loadingGui
+
+-- Intentar ponerlo en CoreGui para que tape todo de forma segura
+pcall(function()
+	loadingGui.Parent = CoreGui
+end)
+if not loadingGui.Parent then
+	loadingGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+-- Efecto de desvanecimiento tras 5 segundos
+task.spawn(function()
+	task.wait(4)
+	for i = 0, 1, 0.1 do
+		bgImage.ImageTransparency = i
+		titleLabel.TextTransparency = i
+		loadingText.TextTransparency = i
+		task.wait(0.05)
+	end
+	loadingGui:Destroy()
+end)
+
+--------------------------------------------------------------------
+-- 1. TEXTO RAINBOW DECORADO SOBRE LA CABEZA (✨ MIRELIÁ HUB ✨)
+--------------------------------------------------------------------
+local billboard = nil
+
+local function crearTextoCabeza(player)
+	local character = player.Character or player.CharacterAdded:Wait()
+	local head = character:WaitForChild("Head", 5)
+	if not head then return end
+
+	if head:FindFirstChild("MireliaTag") then
+		head.MireliaTag:Destroy()
+	end
+
+	billboard = Instance.new("BillboardGui")
+	billboard.Name = "MireliaTag"
+	billboard.Adornee = head
+	billboard.Size = UDim2.new(0, 250, 0, 50)
+	billboard.StudsOffset = Vector3.new(0, 2.8, 0)
+	billboard.AlwaysOnTop = true
+
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.new(1, 0, 1, 0)
+	textLabel.BackgroundTransparency = 1
+	textLabel.Text = "✨ MIRELIÁ HUB ✨"
+	textLabel.TextScaled = true
+	textLabel.Font = Enum.Font.SpecialElite
+	textLabel.Parent = billboard
+
+	billboard.Parent = head
+
+	-- Animación Rainbow
+	task.spawn(function()
+		local hue = 0
+		while billboard and billboard.Parent do
+			hue = (hue + 0.005) % 1
+			textLabel.TextColor3 = Color3.fromHSV(hue, 0.85, 1)
+			task.wait(0.03)
+		end
+	end)
+end
+
+if LocalPlayer.Character then
+	crearTextoCabeza(LocalPlayer)
+end
+LocalPlayer.CharacterAdded:Connect(function()
+	task.wait(1)
+	crearTextoCabeza(LocalPlayer)
+end)
+
+--------------------------------------------------------------------
+-- 2. VENTANA PRINCIPAL (MIRELIÁ HUB - Púrpura con Imagen de Fondo)
+--------------------------------------------------------------------
+local Window = Rayfield:CreateWindow({
+	Name = "MIRELIÁ HUB 🔮",
+	LoadingTitle = "Cargando MIRELIÁ HUB...",
+	LoadingSubtitle = "Modo Celular",
+	ConfigurationSaving = { Enabled = false },
+	Discord = {
+		Enabled = true,
+		Invite = "cwcsUyK8H",
+		RememberJoins = true
+	},
+	KeySystem = false,
+	Theme = "Amethyst", -- Tema inicial por defecto (Púrpura)
+	BackgroundImage = 111426981648607 -- Fondo del panel personalizado
+})
+
+--------------------------------------------------------------------
+-- 3. PESTAÑA PRINCIPAL DE SCRIPTS
+--------------------------------------------------------------------
+local TabScripts = Window:CreateTab("Scripts", 119289138490113)
+
+TabScripts:CreateSection("🔥 Panel MIRELIÁ robar un huevo 🔥")
+
+-- Información del creador en el menú
+TabScripts:CreateLabel("👤 Creador: @mirelia_hub")
+TabScripts:CreateLabel("🐣 Juego: Roba un huevo")
+
+-- Botón: Lemon premium
+TabScripts:CreateButton({
+	Name = "Lemon premium",
+	Callback = function()
+		if billboard then
+			billboard:Destroy()
+		end
+		Rayfield:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/lennonxscripts/lennonhubv2/refs/heads/main/stealaneggv2"))()
+	end,
+})
+
+-- Botón: Miranda premium
+TabScripts:CreateButton({
+	Name = "Miranda premium",
+	Callback = function()
+		if billboard then
+			billboard:Destroy()
+		end
+		Rayfield:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/miirandahub/loader/refs/heads/main/stealaeggs"))()
+	end,
+})
+
+-- Botón: Servidor privado
+TabScripts:CreateButton({
+	Name = "Servidor privado",
+	Callback = function()
+		if billboard then
+			billboard:Destroy()
+		end
+		Rayfield:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/kittylol-hub/Kittylol/refs/heads/main/main.lua"))()
+	end,
+})
+
+--------------------------------------------------------------------
+-- 4. PESTAÑA DE INFORMACIÓN Y CONFIGURACIÓN
+--------------------------------------------------------------------
+local TabInfo = Window:CreateTab("Info", 119289138490113)
+
+TabInfo:CreateSection("🎨 Cambiar Color del Panel 🔰")
+
+-- Selector de Colores para cambiar el tema al instante
+TabInfo:CreateDropdown({
+	Name = "Seleccionar Color de Tema",
+	Options = {"Azul cielo", "Morado", "Púrpura", "Rojo fuerte", "Amarillo"},
+	CurrentOption = "Púrpura",
+	Flag = "ColorThemeDropdown",
+	Callback = function(Option)
+		local selected = Option[1]
+		if selected == "Azul cielo" then
+			Rayfield:SetTheme("Ocean")
+		elseif selected == "Morado" then
+			Rayfield:SetTheme("Default")
+		elseif selected == "Púrpura" then
+			Rayfield:SetTheme("Amethyst")
+		elseif selected == "Rojo fuerte" then
+			Rayfield:SetTheme("DarkBlue")
+		elseif selected == "Amarillo" then
+			Rayfield:SetTheme("AmberGlow")
+		end
+	end,
+})
+
+TabInfo:CreateSection("✨ Estado ✨")
+
+TabInfo:CreateParagraph({
+	Title = "⚡ Próxima actualización...",
+	Content = "⚡ ━━━━━━━━━━━━━━━━━━━━━━ ⚡\n" ..
+	          "  Aproximadamente en la próxima versión:\n" ..
+	          "  • Más scripts y scripts VIPs\n" ..
+	          "  • Bypass para más juegos\n" ..
+	          "  • Menú rápido flotante\n" ..
+	          "⚡ ━━━━━━━━━━━━━━━━━━━━━━ ⚡"
+})
+
