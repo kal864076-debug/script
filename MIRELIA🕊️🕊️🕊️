@@ -1,0 +1,262 @@
+-- Cargar librería Rayfield UI
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local LocalPlayer = Players.LocalPlayer
+
+--------------------------------------------------------------------
+-- 0. PANTALLA DE CARGA MEJORADA
+--------------------------------------------------------------------
+local loadingGui = Instance.new("ScreenGui")
+loadingGui.Name = "MireliaLoadingScreen"
+loadingGui.IgnoreGuiInset = true
+loadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+
+local bgImage = Instance.new("ImageLabel")
+bgImage.Size = UDim2.new(1, 0, 1, 0)
+bgImage.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+bgImage.Image = "rbxassetid://112029134434567"
+bgImage.ScaleType = Enum.ScaleType.Crop
+bgImage.Parent = loadingGui
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 80)
+titleLabel.Position = UDim2.new(0, 0, 0.4, -40)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "✨ MIRELIÁ HUB ✨"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.FredokaOne
+titleLabel.Parent = loadingGui
+
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1, 0, 0, 30)
+loadingText.Position = UDim2.new(0, 0, 0.85, 0)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "Cargando módulos..."
+loadingText.TextColor3 = Color3.fromRGB(180, 180, 220)
+loadingText.TextScaled = true
+loadingText.Font = Enum.Font.SourceSansBold
+loadingText.Parent = loadingGui
+
+pcall(function()
+	loadingGui.Parent = CoreGui
+end)
+if not loadingGui.Parent then
+	loadingGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+task.spawn(function()
+	task.wait(3.5)
+	for i = 0, 1, 0.1 do
+		bgImage.ImageTransparency = i
+		titleLabel.TextTransparency = i
+		loadingText.TextTransparency = i
+		task.wait(0.03)
+	end
+	loadingGui:Destroy()
+end)
+
+--------------------------------------------------------------------
+-- 1. TEXTO RAINBOW SOBRE LA CABEZA
+--------------------------------------------------------------------
+local billboard = nil
+
+local function crearTextoCabeza(player)
+	local character = player.Character or player.CharacterAdded:Wait()
+	local head = character:WaitForChild("Head", 5)
+	if not head then return end
+
+	if head:FindFirstChild("MireliaTag") then
+		head.MireliaTag:Destroy()
+	end
+
+	billboard = Instance.new("BillboardGui")
+	billboard.Name = "MireliaTag"
+	billboard.Adornee = head
+	billboard.Size = UDim2.new(0, 250, 0, 50)
+	billboard.StudsOffset = Vector3.new(0, 2.8, 0)
+	billboard.AlwaysOnTop = true
+
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.new(1, 0, 1, 0)
+	textLabel.BackgroundTransparency = 1
+	textLabel.Text = "✨ MIRELIÁ HUB ✨"
+	textLabel.TextScaled = true
+	textLabel.Font = Enum.Font.FredokaOne
+	textLabel.Parent = billboard
+
+	billboard.Parent = head
+
+	task.spawn(function()
+		local hue = 0
+		while billboard and billboard.Parent do
+			hue = (hue + 0.006) % 1
+			textLabel.TextColor3 = Color3.fromHSV(hue, 0.8, 1)
+			task.wait(0.03)
+		end
+	end)
+end
+
+if LocalPlayer.Character then
+	crearTextoCabeza(LocalPlayer)
+end
+LocalPlayer.CharacterAdded:Connect(function()
+	task.wait(1)
+	crearTextoCabeza(LocalPlayer)
+end)
+
+--------------------------------------------------------------------
+-- 2. VENTANA PRINCIPAL
+--------------------------------------------------------------------
+local Window = Rayfield:CreateWindow({
+	Name = "MIRELIÁ HUB 🔮",
+	LoadingTitle = "Cargando MIRELIÁ HUB...",
+	LoadingSubtitle = "Modo Celular / PC",
+	ConfigurationSaving = { Enabled = false },
+	Discord = {
+		Enabled = true,
+		Invite = "cwcsUyK8H",
+		RememberJoins = true
+	},
+	KeySystem = false,
+	Theme = "Amethyst",
+	BackgroundImage = 111426981648607
+})
+
+--------------------------------------------------------------------
+-- 3. PESTAÑA PRINCIPAL DE SCRIPTS
+--------------------------------------------------------------------
+local TabScripts = Window:CreateTab("Scripts", 4483362458)
+
+TabScripts:CreateSection("🔥 Scripts de Robar un Huevo 🔥")
+
+TabScripts:CreateLabel("👤 Creador: @mirelia_hub")
+TabScripts:CreateLabel("🐣 Objetivo: Roba un Huevo")
+
+local function ejecutarScript(url)
+	pcall(function()
+		loadstring(game:HttpGet(url))()
+	end)
+end
+
+TabScripts:CreateButton({
+	Name = "⚡ Lemon Premium",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/lennonxscripts/lennonhubv2/refs/heads/main/stealaneggv2")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "👑 Miranda Premium",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/miirandahub/loader/refs/heads/main/stealaeggs")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🌐 Servidor Privado (Kittylol)",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/kittylol-hub/Kittylol/refs/heads/main/main.lua")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🛡️ BK Script",
+	Callback = function()
+		ejecutarScript("https://api.luarmor.net/files/v4/loaders/9ee4edde227ac85f50872bf9e4226508.lua")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🚀 OMG HUB",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🍀 CLOVER HUB",
+	Callback = function()
+		ejecutarScript("https://rawscripts.net/raw/Steal-An-Egg-Clover-Hub-or-Auto-Steal-Egg-Predictor-Auto-Hatch-and-ESP-226600")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🍏 BIGFROOT",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/AhmadV6/Loader/refs/heads/main/BFLoader.lua")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🥚 STEAL AN EGG Core",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/Dodoyung24/script-core/main/Steal-An-Egg")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🐍 OUROBOROS",
+	Callback = function()
+		ejecutarScript("https://raw.githubusercontent.com/joustingmatch/Ouroboros/main/loader.lua")
+	end,
+})
+
+TabScripts:CreateButton({
+	Name = "🔓 Bypass Anti-Cheat",
+	Callback = function()
+		ejecutarScript("https://rawscripts.net/raw/Steal-An-Egg-bypass-anti-cheat-224212")
+	end,
+})
+
+--------------------------------------------------------------------
+-- 4. PESTAÑA DE CONFIGURACIÓN Y ESTADO
+--------------------------------------------------------------------
+local TabInfo = Window:CreateTab("Ajustes & Info", 4483362458)
+
+TabInfo:CreateSection("🎨 Personalización de Tema")
+
+-- Mapa de temas nativos soportados por Rayfield
+local themeMap = {
+	["Azul cielo"] = "Ocean",
+	["Morado / Púrpura"] = "Amethyst",
+	["Rojo Oscuro"] = "DarkBlue",
+	["Amarillo / Ámbar"] = "AmberGlow",
+	["Verde Esmeralda"] = "Green",
+	["Tema Oscuro"] = "Default"
+}
+
+TabInfo:CreateDropdown({
+	Name = "Seleccionar Color del Panel",
+	Options = {"Morado / Púrpura", "Azul cielo", "Rojo Oscuro", "Amarillo / Ámbar", "Verde Esmeralda", "Tema Oscuro"},
+	CurrentOption = "Morado / Púrpura",
+	Flag = "ColorThemeDropdown",
+	Callback = function(Option)
+		local selectedOption = type(Option) == "table" and Option[1] or Option
+		local targetTheme = themeMap[selectedOption] or "Amethyst"
+		
+		-- Cambio de tema dinámico compatible con Rayfield
+		pcall(function()
+			if Rayfield.ModifyTheme then
+				Rayfield:ModifyTheme(targetTheme)
+			elseif Window.ModifyTheme then
+				Window:ModifyTheme(targetTheme)
+			else
+				Rayfield:SetTheme(targetTheme)
+			end
+		end)
+	end,
+})
+
+TabInfo:CreateSection("✨ Novedades ✨")
+
+TabInfo:CreateParagraph({
+	Title = "⚡ Próximas Funciones",
+	Content = "• Optimización de carga en dispositivos móviles.\n" ..
+	          "• Integración de scripts VIP exclusivos.\n" ..
+	          "• Sistema de Auto-Farm mejorado para eventos.\n" ..
+	          "• Soporte completo de Bypass de Anti-Cheat."
+})
+
